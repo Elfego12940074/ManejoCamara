@@ -1,0 +1,78 @@
+<!-DOCTYPE HTML-->
+<html>
+<head>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" type="text/css"/>
+<link rel="stylesheet" href="css/jquery.mobile.theme-1.4.5.min.css" type="text/css"  />
+<link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" type="text/css" />
+<script type="text/javascript" src="js/phonegap.js" ></script>
+<script type="text/javascript" src="js/jquery-2.2.0.min.js" ></script>
+<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js" ></script>
+<script type="text/javascript" charset="utf-8">
+    var pictureSource;
+    var destinationType;
+    ducument.addEventListener("deviceready",onDeviceReady, false);
+    function onDeviceReady(){
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+        }
+        function onPhotoDataSuccess(imageData){
+            var smallImage= document.getElementsById('smallImage');
+            smallImage.style.display='block';
+            smallImage.src="data:iamge/jpeg;base64, " + imageData;          
+        }
+        function onPhotoDataSuccess(imageURI){
+            var largeImage = document.getElementsById('largeImage');
+            largeImage.style.display = 'block';
+            largeImage.src =imageURI;
+        }
+        //a button will call this funtion
+        function capturePhoto(){
+            //Take pincture using device camera and retrieve image as base64-encoded string
+            navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality:50,
+                destinationType:destinationType.DATA_URL});
+                    }
+        /// a button will call this function
+        function capturePhotoEdit(){
+            
+            navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality:20, allowEdit: true,
+            destinationTipe:destinationType.DATA_URL});
+        }
+        /// a button will call this function
+        function getPhoto(source){
+            ///recive la imagen de la ubicacion de la carpeta
+            navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality:50,
+                destinationType:destinationType.FILE_URI,
+              sourceType: source});              
+        }
+        //called if something bad happens
+        function onFail(message){
+            alert('Failed because: ' + message);
+        }
+</script>
+<style type="text/css">
+    p{
+        text-align: center;
+    }
+</style>
+
+</head>
+<body>
+<div data-role="page" id="principal" data-theme="a">
+	<div data-role="header">
+            <p>Camara</p>
+	</div>
+	<div data-role="content">
+            <p>Acceso a la camara</p>
+            <button onclick="capturePhoto(); ">Capture Photo</button> <br>
+            <button onclick="capturePhotoEdit(); ">Captura foto editable</button><br>
+            <button onclick="getPhoto(pictureSource.PHOTOLIBRARY); ">From Photo Libraty</button><br>
+            <button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM); ">From Photon Album</button><br>
+            <img style="display: none; width: 60px; height:60px; " id="smallImage" src=""/>
+            <img style="display: none;" id="largeImage" src=""/>
+            </div>
+	<div data-role="footer" data-position="fixed">
+		<p>pie de la aplicación</p>
+	</div>
+</div>
+</body>
+</html>
